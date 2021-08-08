@@ -19,4 +19,4 @@ npm run serve
 
 complie and then run the project.
 
-Note: there is no .env file added if need to change any url please go to the file and change.
+Note: there is no .env file added if need to change any url then need to go to the file.
