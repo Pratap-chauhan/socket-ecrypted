@@ -83,14 +83,6 @@ var DBConnection = /** @class */ (function () {
             });
         });
     };
-    DBConnection.prototype.getAllData = function () {
-        try {
-            return messageModel_1.MessageModel.find({});
-        }
-        catch (e) {
-            return e;
-        }
-    };
     return DBConnection;
 }());
 exports.db = new DBConnection();

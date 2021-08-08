@@ -34,7 +34,6 @@ class DBConnection {
       console.log("inserting", error);
       return error;
     }
-
   }
 }
 

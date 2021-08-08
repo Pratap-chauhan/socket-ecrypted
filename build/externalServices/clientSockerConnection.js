@@ -76,25 +76,21 @@ var ClientSocketConnection = /** @class */ (function () {
     };
     ClientSocketConnection.prototype.insertMessageInDB = function (message) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRes, data, error_2;
+            var queryRes, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
+                        _a.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, db_1.db.insertDbquery(message)];
                     case 1:
                         queryRes = _a.sent();
                         console.log("Insertion Query Response " + JSON.stringify(queryRes));
-                        return [4 /*yield*/, db_1.db.getAllData()];
+                        return [3 /*break*/, 3];
                     case 2:
-                        data = _a.sent();
-                        console.log(JSON.stringify(data));
-                        return [3 /*break*/, 4];
-                    case 3:
                         error_2 = _a.sent();
                         console.log("error insertMessageInDB", error_2);
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
                 }
             });
         });

@@ -25,7 +25,7 @@ class SocketConnection {
             this.socket.emit("sending_data", messageString);
             setInterval(()=>{
                 this.emitMessage()
-            },30000)
+            },10000)
         } catch(e){
             console.log("erroremit", e);
         }
