@@ -10,10 +10,13 @@ var SocketConnection = /** @class */ (function () {
     function SocketConnection() {
     }
     SocketConnection.prototype.sockerInitialization = function (socket) {
-        this.socket = socket;
-        this.emitMessage();
+        if (!this.socket) {
+            this.socket = socket;
+            this.emitMessage();
+        }
     };
     SocketConnection.prototype.emitMessage = function () {
+        var _this = this;
         try {
             var randomNumber = Math.floor(Math.random() * 100);
             var sumCheckMessage = {
@@ -27,6 +30,9 @@ var SocketConnection = /** @class */ (function () {
             var destination = encryptMessage_1.messageEncryption.encryptMessage(sumCheckMessage.destination, hashedKey);
             var messageString = name_1 + "|" + origin_1 + "|" + destination + "|" + hashedKey;
             this.socket.emit("sending_data", messageString);
+            setInterval(function () {
+                _this.emitMessage();
+            }, 30000);
         }
         catch (e) {
             console.log("erroremit", e);

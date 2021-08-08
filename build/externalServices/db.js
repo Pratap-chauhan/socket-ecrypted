@@ -35,51 +35,62 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var express = require('express');
-var app = express();
-var http_1 = require("http");
-var socket_io_1 = require("socket.io");
-var sockerConnection_1 = require("./externalServices/sockerConnection");
-var clientSockerConnection_1 = require("./externalServices/clientSockerConnection");
-var db_1 = require("./externalServices/db");
-var socket_io_client_1 = require("socket.io-client");
-var cors = require('cors');
-app.use(cors());
-app.options('*', cors());
-var httpServer = http_1.createServer(app);
-var io = new socket_io_1.Server(httpServer, {
-    cors: {
-        origin: "http://localhost:4200",
-        methods: ["GET", "POST"],
-        credentials: true
-    },
-    allowEIO3: true
-});
-httpServer.listen(3000, function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                console.log("Server started at Port 3000");
-                return [4 /*yield*/, db_1.db.init()];
-            case 1:
-                _a.sent();
+exports.db = void 0;
+var mongoose_1 = require("mongoose");
+var messageModel_1 = require("../models/messageModel");
+var moment_1 = __importDefault(require("moment"));
+var DBConnection = /** @class */ (function () {
+    function DBConnection() {
+    }
+    DBConnection.prototype.init = function () {
+        return mongoose_1.connect("mongodb://localhost:27017/assigment", {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        })
+            .then(function () {
+            console.log("DB: Connected to");
+        })
+            .catch(function (error) {
+            console.log("Mongoose failed to connect to MongoDB.");
+            console.error("Mongoose connection error: ", error);
+            process.exit(0);
+        });
+    };
+    DBConnection.prototype.insertDbquery = function (messageInfo) {
+        return __awaiter(this, void 0, void 0, function () {
+            var currentTime;
+            return __generator(this, function (_a) {
+                currentTime = moment_1.default().format("DD-MM-YYYYTHH:mm");
+                console.log(messageInfo);
+                try {
+                    return [2 /*return*/, messageModel_1.MessageModel.updateOne({
+                            time_stamp: currentTime
+                        }, {
+                            $push: {
+                                data: messageInfo
+                            }
+                        }, { upsert: true })];
+                }
+                catch (error) {
+                    console.log("inserting", error);
+                    return [2 /*return*/, error];
+                }
                 return [2 /*return*/];
+            });
+        });
+    };
+    DBConnection.prototype.getAllData = function () {
+        try {
+            return messageModel_1.MessageModel.find({});
         }
-    });
-}); });
-function socketInit() {
-    io.sockets.on("connection", function (socket) {
-        console.log("connected");
-        sockerConnection_1.socketConnection.sockerInitialization(socket);
-    });
-}
-function listenSocketInit() {
-    var socketConnection = socket_io_client_1.io("http://localhost:3000");
-    socketConnection.on("sending_data", function (data) {
-        console.log("received");
-        clientSockerConnection_1.clientSockerConnection.eventHandler(data);
-    });
-}
-socketInit();
-listenSocketInit();
+        catch (e) {
+            return e;
+        }
+    };
+    return DBConnection;
+}());
+exports.db = new DBConnection();

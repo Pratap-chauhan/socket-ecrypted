@@ -4,8 +4,10 @@ import data from "../constants/data.json";
 class SocketConnection {
     private socket: Socket;
     sockerInitialization(socket: Socket){
-        this.socket = socket;
-        this.emitMessage()
+        if(!this.socket) {
+            this.socket = socket;
+            this.emitMessage();
+        }
     }
     emitMessage(){
         try{
@@ -21,6 +23,9 @@ class SocketConnection {
             const destination = messageEncryption.encryptMessage(sumCheckMessage.destination, hashedKey);
             const messageString = `${name}|${origin}|${destination}|${hashedKey}`;
             this.socket.emit("sending_data", messageString);
+            setInterval(()=>{
+                this.emitMessage()
+            },30000)
         } catch(e){
             console.log("erroremit", e);
         }
